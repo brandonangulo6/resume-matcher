@@ -19,6 +19,10 @@ def get_embedding(text):
 def get_match_score(resume_text, job_text):
     resume_emb = get_embedding(resume_text)
     job_emb = get_embedding(job_text)
-    similarity = torch.sum(resume_emb * job_emb, dim=1)
-    match_score = torch.sigmoid(similarity).item()
+    similarity = F.cosine_similarity(resume_emb, job_emb).item()
+
+    # Normalize from [-1, 1] to [0, 1]
+    match_score = (similarity + 1) / 2
+    #similarity = torch.sum(resume_emb * job_emb, dim=1)
+    #match_score = torch.sigmoid(similarity).item()
     return match_score
